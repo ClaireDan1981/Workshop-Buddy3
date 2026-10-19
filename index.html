@@ -1,0 +1,457 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop Buddy | Demo</title>
+<style>
+:root {
+  --navy:#142b36;
+  --green:#c7f36b;
+  --bg:#f3f6f5;
+  --text:#18303b;
+  --red:#c93636;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:system-ui,-apple-system,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header {
+  background:var(--navy);
+  color:white;
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.logo { font-size:23px;font-weight:900; }
+.subtitle { font-size:13px;color:#c2d1d4;margin-top:4px; }
+nav { display:flex;gap:8px;flex-wrap:wrap; }
+button { font:inherit;cursor:pointer; }
+nav button {
+  background:transparent;
+  color:white;
+  border:1px solid #71848a;
+  border-radius:10px;
+  padding:12px;
+  font-weight:700;
+}
+nav button.active {
+  background:var(--green);
+  color:var(--navy);
+  border-color:var(--green);
+}
+main { max-width:1200px;margin:auto;padding:22px 15px 60px; }
+.view { display:none; }
+.view.active { display:block; }
+h1 { font-size:clamp(28px,5vw,44px); }
+h2 { font-size:25px; }
+p { line-height:1.5; }
+.muted { color:#63757a; }
+.hero {
+  background:var(--navy);
+  color:white;
+  padding:clamp(25px,6vw,65px);
+  border-radius:20px;
+  margin-bottom:25px;
+}
+.hero p { color:#c9d7d9;max-width:600px; }
+.hero-actions { display:flex;gap:12px;flex-wrap:wrap;margin-top:25px; }
+.action {
+  border:0;
+  border-radius:12px;
+  padding:16px 22px;
+  min-height:58px;
+  font-weight:800;
+  background:var(--green);
+  color:var(--navy);
+}
+.action.secondary { background:white; }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));
+  gap:15px;
+}
+.card {
+  background:white;
+  border:1px solid #dce5e4;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 3px 12px #142b3609;
+}
+.card.overdue {
+  background:#fff0ee;
+  border:3px solid var(--red);
+}
+.reg { font-size:24px;font-weight:900;margin:7px 0; }
+.job { font-size:13px;color:#687a80;font-weight:700; }
+.stage {
+  display:inline-block;
+  padding:9px 12px;
+  border-radius:9px;
+  background:#e8edf0;
+  font-weight:800;
+  font-size:14px;
+}
+.stage-2 { background:#ffebc7;color:#80520d; }
+.stage-4 { background:#d8f2d8;color:#205a30; }
+.next {
+  width:100%;
+  min-height:78px;
+  background:var(--green);
+  border:0;
+  border-radius:12px;
+  margin-top:15px;
+  font-size:18px;
+  font-weight:900;
+  color:var(--navy);
+  touch-action:manipulation;
+}
+.next:disabled { background:#e8eeee;color:#647579; }
+.stats {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+  margin:20px 0;
+}
+.stat { background:white;border-radius:14px;padding:20px; }
+.stat strong { display:block;font-size:34px; }
+.stat span { color:#63757a; }
+.warning { color:#ae2424;font-weight:800; }
+.group { margin:30px 0; }
+.group h3 {
+  display:flex;
+  justify-content:space-between;
+  border-bottom:2px solid #dce5e4;
+  padding-bottom:12px;
+}
+.lookup { max-width:520px; }
+label { display:block;margin:16px 0 7px;font-weight:800; }
+input {
+  width:100%;
+  padding:16px;
+  border:2px solid #9eb2b7;
+  border-radius:11px;
+  font:inherit;
+  font-size:18px;
+}
+.progress { display:flex;gap:5px;margin:20px 0; }
+.progress span {
+  flex:1;height:11px;background:#e2e9e9;border-radius:9px;
+}
+.progress span.done { background:#75b54c; }
+.reset {
+  padding:13px 18px;
+  border:1px solid #9aafb4;
+  border-radius:10px;
+  background:white;
+  font-weight:800;
+}
+footer { padding:25px;text-align:center;color:#6b7e83;font-size:13px; }
+@media(max-width:600px) {
+  header { align-items:stretch; }
+  nav { width:100%; }
+  nav button { flex:1;padding:12px 6px;font-size:13px; }
+  main { padding:15px 12px 45px; }
+  .hero-actions button { width:100%; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">🔧 Workshop Buddy</div>
+    <div class="subtitle">Kehoe's Car Garage · Enniscorthy, Wexford</div>
+  </div>
+  <nav>
+    <button data-view="home" class="active">Home</button>
+    <button data-view="workshop">Workshop</button>
+    <button data-view="customer">Customer</button>
+    <button data-view="office">Office</button>
+  </nav>
+</header>
+
+<main>
+  <section id="home" class="view active">
+    <div class="hero">
+      <h1>Less time on the phone.<br>More time fixing cars.</h1>
+      <p>
+        Workshop Buddy helps independent garages track repairs,
+        keep customers informed and spot jobs delayed by parts.
+      </p>
+      <div class="hero-actions">
+        <button class="action" onclick="showView('workshop')">
+          Open Workshop →
+        </button>
+        <button class="action secondary" onclick="showView('customer')">
+          Check My Car
+        </button>
+        <button class="action secondary" onclick="showView('office')">
+          Office Dashboard
+        </button>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h2>🔧 Workshop</h2>
+        <p>Big, easy-to-tap buttons let mechanics update jobs without typing.</p>
+      </div>
+      <div class="card">
+        <h2>🚗 Customer</h2>
+        <p>Customers check the progress of their own car using two details.</p>
+      </div>
+      <div class="card">
+        <h2>📋 Office</h2>
+        <p>See every job by stage, overdue parts and cars ready for collection.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="workshop" class="view">
+    <h2>Today's Workshop</h2>
+    <p class="muted">Tap the large button on a car to advance its stage.</p>
+    <div id="workshop-stats" class="stats"></div>
+    <div id="workshop-cards" class="grid"></div>
+  </section>
+
+  <section id="customer" class="view">
+    <h2>Check Your Car's Progress</h2>
+    <p class="muted">Enter your job number and car registration.</p>
+    <div class="card lookup">
+      <form id="lookup-form">
+        <label for="job-number">Job Number</label>
+        <input id="job-number" required placeholder="e.g. KB-1043">
+        <label for="registration">Car Registration</label>
+        <input id="registration" required placeholder="e.g. 152-WX-3481">
+        <button class="action" style="width:100%;margin-top:20px">
+          Check Status →
+        </button>
+      </form>
+      <p class="muted" style="font-size:13px">
+        Demo: KB-1043 / 152-WX-3481
+      </p>
+    </div>
+    <div id="customer-result" style="max-width:520px;margin-top:20px"
+         aria-live="polite"></div>
+  </section>
+
+  <section id="office" class="view">
+    <h2>Office Dashboard</h2>
+    <p class="muted">
+      Cars waiting for parts longer than two days are highlighted red.
+    </p>
+    <button class="reset" onclick="resetDemo()">Reset Demo Data</button>
+    <div id="office-stats" class="stats"></div>
+    <div id="office-groups"></div>
+  </section>
+</main>
+
+<footer>
+  Workshop Buddy · Internal Demo · Sample data only ·
+  No live customer notifications
+</footer>
+
+<script>
+"use strict";
+
+const stages = [
+  "Booked in",
+  "Being checked",
+  "Waiting for parts",
+  "Being fixed",
+  "Ready to collect"
+];
+
+const notes = [
+  "Your car is booked in and waiting for its first check.",
+  "We are checking your car and will update its progress.",
+  "We are waiting for a replacement part before work can continue.",
+  "Repairs are underway in the workshop.",
+  "Your car is ready. Please contact the garage to arrange collection."
+];
+
+const DAY = 86400000;
+const STORAGE_KEY = "workshop-buddy-demo-v1";
+
+function sampleJobs() {
+  const now = Date.now();
+  return [
+    {id:"KB-1041",reg:"241-WX-1842",car:"Toyota Corolla",stage:0,since:now-2*3600000},
+    {id:"KB-1042",reg:"181-WX-926",car:"Volkswagen Golf",stage:1,since:now-3*3600000},
+    {id:"KB-1043",reg:"152-WX-3481",car:"Ford Focus",stage:2,since:now-4.5*DAY},
+    {id:"KB-1044",reg:"201-WX-772",car:"Hyundai Tucson",stage:3,since:now-4*3600000},
+    {id:"KB-1045",reg:"171-WX-2050",car:"Skoda Octavia",stage:4,since:now-DAY},
+    {id:"KB-1046",reg:"221-WX-607",car:"Kia Sportage",stage:2,since:now-1.2*DAY},
+    {id:"KB-1047",reg:"191-WX-5114",car:"Nissan Qashqai",stage:4,since:now-2*3600000},
+    {id:"KB-1048",reg:"161-WX-918",car:"Opel Astra",stage:0,since:now-3600000}
+  ];
+}
+
+let jobs;
+try {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  jobs = Array.isArray(saved) && saved.length ? saved : sampleJobs();
+} catch {
+  jobs = sampleJobs();
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
+  } catch {
+    alert("Could not save changes in this browser.");
+  }
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function overdue(job) {
+  return job.stage === 2 &&
+    (Date.now() - job.since) > 2 * DAY;
+}
+
+function showView(view) {
+  document.querySelectorAll(".view").forEach(el => {
+    el.classList.toggle("active", el.id === view);
+  });
+  document.querySelectorAll("nav button").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.view === view);
+  });
+  if (view === "workshop") renderWorkshop();
+  if (view === "office") renderOffice();
+  window.scrollTo(0,0);
+}
+
+document.querySelectorAll("nav button").forEach(btn => {
+  btn.addEventListener("click", () => showView(btn.dataset.view));
+});
+
+function statsHTML() {
+  const ready = jobs.filter(j => j.stage === 4).length;
+  const waiting = jobs.filter(j => j.stage === 2).length;
+  const late = jobs.filter(overdue).length;
+  return `
+    <div class="stat"><strong>${jobs.length-ready}</strong><span>Jobs in progress</span></div>
+    <div class="stat"><strong>${waiting}</strong><span>Waiting for parts</span></div>
+    <div class="stat"><strong>${ready}</strong><span>Ready to collect</span></div>
+    <div class="stat"><strong>${late}</strong><span>Overdue parts</span></div>
+  `;
+}
+
+function jobCard(job, isWorkshop) {
+  const late = overdue(job);
+  const days = Math.floor((Date.now() - job.since) / DAY);
+  return `
+    <article class="card ${late ? "overdue" : ""}">
+      <div class="job">${escapeHTML(job.id)}</div>
+      <div class="reg">${escapeHTML(job.reg)}</div>
+      <p class="muted">${escapeHTML(job.car)}</p>
+      <span class="stage stage-${job.stage}">${stages[job.stage]}</span>
+      ${late ? `<p class="warning">⚠ Waiting ${days} days — follow up!</p>` : ""}
+      <p>${notes[job.stage]}</p>
+      ${isWorkshop ? `
+        <button class="next" data-next="${escapeHTML(job.id)}"
+          ${job.stage === 4 ? "disabled" : ""}>
+          ${job.stage === 4 ? "✓ Ready for collection" :
+          "Next: " + stages[job.stage+1] + " →"}
+        </button>` : ""}
+    </article>
+  `;
+}
+
+function renderWorkshop() {
+  document.getElementById("workshop-stats").innerHTML = statsHTML();
+  document.getElementById("workshop-cards").innerHTML =
+    jobs.map(j => jobCard(j,true)).join("");
+}
+
+function renderOffice() {
+  document.getElementById("office-stats").innerHTML = statsHTML();
+  document.getElementById("office-groups").innerHTML =
+    stages.map((stage,index) => {
+      const group = jobs.filter(j => j.stage === index);
+      group.sort((a,b) => Number(overdue(b)) - Number(overdue(a)));
+      return `
+        <section class="group">
+          <h3>${stage} <span>${group.length}</span></h3>
+          ${group.length ?
+            `<div class="grid">${group.map(j => jobCard(j,false)).join("")}</div>` :
+            `<p class="muted">No cars at this stage.</p>`}
+        </section>
+      `;
+    }).join("");
+}
+
+document.addEventListener("click", event => {
+  const button = event.target.closest("[data-next]");
+  if (!button) return;
+  const job = jobs.find(j => j.id === button.dataset.next);
+  if (!job || job.stage >= 4) return;
+  job.stage++;
+  job.since = Date.now();
+  save();
+  renderWorkshop();
+  renderOffice();
+});
+
+document.getElementById("lookup-form").addEventListener("submit", event => {
+  event.preventDefault();
+  const normalize = s => s.toUpperCase().replace(/[^A-Z0-9]/g,"");
+  const enteredJob = normalize(document.getElementById("job-number").value);
+  const enteredReg = normalize(document.getElementById("registration").value);
+
+  const job = jobs.find(j =>
+    normalize(j.id) === enteredJob &&
+    normalize(j.reg) === enteredReg
+  );
+
+  const result = document.getElementById("customer-result");
+  if (!job) {
+    result.innerHTML = `<div class="card">
+      No matching job found. Check your details or contact the garage.
+    </div>`;
+    return;
+  }
+
+  result.innerHTML = `
+    <div class="card">
+      <div class="job">${escapeHTML(job.id)}</div>
+      <div class="reg">${escapeHTML(job.reg)}</div>
+      <p class="muted">${escapeHTML(job.car)}</p>
+      <span class="stage stage-${job.stage}">${stages[job.stage]}</span>
+      <div class="progress" aria-label="Stage ${job.stage+1} of 5">
+        ${stages.map((_,i) =>
+          `<span class="${i <= job.stage ? "done" : ""}"></span>`
+        ).join("")}
+      </div>
+      <p>${notes[job.stage]}</p>
+    </div>
+  `;
+});
+
+function resetDemo() {
+  if (!confirm("Reset all demo cars to their original stages?")) return;
+  jobs = sampleJobs();
+  save();
+  renderWorkshop();
+  renderOffice();
+  document.getElementById("customer-result").innerHTML = "";
+}
+
+renderWorkshop();
+renderOffice();
+</script>
+</body>
+</html>
